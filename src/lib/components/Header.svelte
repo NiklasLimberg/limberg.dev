@@ -6,7 +6,11 @@
 
     metadata_store.subscribe(metadata => {
         title = metadata.title;
-        publishedDate = Intl.DateTimeFormat('en-US').format(metadata.publishedDate);
+        publishedDate = Intl.DateTimeFormat('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        }).format(metadata.publishedDate);
     });
 
 </script>

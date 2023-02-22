@@ -6,7 +6,10 @@ import { remarkSections } from './remark-plugins/sectionize.js';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
 
-import shiki, { getHighlighter } from 'shiki';
+import Prism from 'prismjs';
+import loadLanguages from 'prismjs/components/index.js';
+
+loadLanguages();
 
 function escapeHtml(code) {
     return code.replace(
@@ -15,11 +18,6 @@ function escapeHtml(code) {
         (character) => ({ '{': '&lbrace;', '}': '&rbrace;', '`': '&grave;' }[character]),
     );
 }
-
-const shikiHighlighter = await getHighlighter({
-    theme: 'nord',
-});
-
 
 /** @type {import('@sveltejs/kit').Config} */
 export default {
@@ -35,20 +33,9 @@ export default {
                     const [lang, path] = langAndPath.split('=');
 
                     const pathDiv = path ? `<div class="path">${path}</div>` : '';
-
-                    const tokens = shikiHighlighter.codeToThemedTokens(code, lang);
-                    const html = escapeHtml(shiki.renderToHtml(tokens, {
-                        lang,
-                        fg: shikiHighlighter.getForegroundColor('nord'), 
-                        bg: shikiHighlighter.getBackgroundColor('nord'),
-                        elements: {
-                            pre({ className, style, children }) {
-                                return `<pre class="${className}" style="${style}">${pathDiv}${children}</pre>`;
-                            },
-                        },
-                    }));
+                    const html = escapeHtml(Prism.highlight(code, Prism.languages[lang], lang));
                     
-                    return html;
+                    return `<pre class="prismjs">${pathDiv}<code class="language-${lang}">${html}</code></pre>`;
                 },
             },
         }),

@@ -5,32 +5,44 @@
 </script>
   
 <header>
-    <h1>Blog Listing Page</h1>
+    <h1>Posts</h1>
+    <p>All my posts on one page.</p>
 </header>
 
 <main>
-    <ol>
-        {#each data.posts as post}
-            <li>
-                <h2>
-                    <a href={post.path}>
-                        {post.title}
-                    </a>
-                </h2>
-                <div>
-                    {post.description}
-                </div>
-                <div>
-                    Published {post.date}
-                </div>
-            </li>
-        {/each}
-    </ol>
+    {#each data.posts as post}
+        <article>
+            <h2>
+                <a href={post.path}>
+                    {post.title}
+                </a>
+            </h2>
+            <div class="description">
+                {post.description}
+            </div>
+            <div>
+                Published {post.date}
+            </div>
+        </article>
+    {/each}
 </main>
 
 <style>
-ol {
-  list-style-type: none;
-  padding: 0;
+
+article {
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 16px;
+    margin: 32px 0;
 }
+
+article h2 {
+    margin: 0 0 16px 0;
+}
+
+.description {
+    margin-bottom: 16px;
+}
+
 </style>
