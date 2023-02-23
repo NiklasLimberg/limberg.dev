@@ -3,6 +3,11 @@
     import { faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
 </script>
 
+<svelte:head>
+    <title>limberg.dev DevBlog</title>
+    <meta name="description" content="About Niklas Limberg" />
+</svelte:head>
+
 <main>
     <h1>limberg.dev DevBlog</h1>
     <p>Hi, I'm Niklas Limberg and I'm currently working as a software developer at
@@ -11,15 +16,15 @@
         I'm frontend developer interested in all things web.
     </p>
     <p>
-        I write about the web platform centered around building progressively enhancement websites
+        I generally write about the web platform, centered around building progressively enhancement websites
         using the newest features of the platform.
     </p>
-    <p>You can find my blog posts <a href="/blog">here</a></p>
+    <p>You can find my blog posts <a href="/blog" title="An overview of all my posts.">here</a></p>
 
+    <p>I'm also on these social media sites:</p>
     <div class="social-links">
-        <span>I'm also on these social media sites:</span>
-        <a href="https://github.com/NiklasLimberg" title="GitHub Profile"><Fa icon={faGithub} /></a>
-        <a href="https://twitter.com/Niklas_Limberg" title="Twitter Profile"><Fa icon="{faTwitter}" /></a>
+        <a href="https://github.com/NiklasLimberg" title="GitHub Profile"><Fa icon={faGithub} size="2x" /></a>
+        <a href="https://twitter.com/Niklas_Limberg" title="Twitter Profile"><Fa icon="{faTwitter}" size="2x" /></a>
     </div>
 </main>
 
@@ -27,7 +32,7 @@
     .social-links {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 16px;
         margin-bottom: 16px;
     }
 </style>

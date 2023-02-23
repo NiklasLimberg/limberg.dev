@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { formatDate } from '$lib/formater/date';
     import { metadata_store } from '$lib/store/metadata';
     
     let title: string;
@@ -6,11 +7,7 @@
 
     metadata_store.subscribe(metadata => {
         title = metadata.title;
-        publishedDate = Intl.DateTimeFormat('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-        }).format(metadata.publishedDate);
+        publishedDate = formatDate(metadata.date);
     });
 
 </script>

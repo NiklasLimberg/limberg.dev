@@ -1,6 +1,6 @@
 export interface Metadata {
     title: string;
     description: string;
-    publishedDate: Date;
+    date: string;
     tags: string[];
 }

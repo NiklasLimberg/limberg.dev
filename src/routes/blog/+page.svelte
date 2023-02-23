@@ -1,8 +1,14 @@
 <script lang="ts">
     import type { PageData } from './$types';
+    import { formatDate } from '$lib/formater/date';
 
     export let data: PageData;
 </script>
+
+<svelte:head>
+    <title>limberg.dev DevBlog</title>
+    <meta name="description" content="An overview of all my posts." />
+</svelte:head>
   
 <header>
     <h1>Posts</h1>
@@ -13,7 +19,7 @@
     {#each data.posts as post}
         <article>
             <h2>
-                <a href={post.path}>
+                <a href={post.path} title="{post.title}">
                     {post.title}
                 </a>
             </h2>
@@ -21,14 +27,13 @@
                 {post.description}
             </div>
             <div>
-                Published {post.date}
+                Published {formatDate(post.date)}
             </div>
         </article>
     {/each}
 </main>
 
 <style>
-
 article {
     background-color: #f5f5f5;
     border: 1px solid #ccc;
