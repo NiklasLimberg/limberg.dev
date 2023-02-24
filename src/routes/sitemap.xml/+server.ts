@@ -5,14 +5,14 @@ const xmlPostamble = '</urlset>';
 
 function generateSitemap(paths: string[]) {
     const siteMapEntries = paths.reduce((acc, path) => {
-        return acc + `<url><loc>https://limberg.dev/${path}</loc></url>`;
+        return acc + `<url><loc>https://limberg.dev${path}</loc></url>`;
     }, xmlPreamble);
 
     return siteMapEntries.concat(xmlPostamble);
 }
 
 export async function GET() {
-    const pages = ['', 'blog'];
+    const pages = ['/', '/blog'];
     const posts = await getPosts();
     
     const paths = pages.concat(posts.map(post => post.path));

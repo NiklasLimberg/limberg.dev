@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { PageData } from './$types';
-    import { formatDate } from '$lib/formater/date';
+    import PostOverview from '$lib/components/PostOverview.svelte';
 
     export let data: PageData;
 </script>
@@ -17,37 +17,11 @@
 
 <main>
     {#each data.posts as post}
-        <article>
-            <h2>
-                <a href={post.path} title="{post.title}">
-                    {post.title}
-                </a>
-            </h2>
-            <div class="description">
-                {post.description}
-            </div>
-            <div>
-                Published {formatDate(post.date)}
-            </div>
-        </article>
+        <PostOverview
+            title={post.title}
+            path={post.path}
+            description={post.description}
+            date={post.date}
+        />
     {/each}
 </main>
-
-<style>
-article {
-    background-color: #f5f5f5;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 16px;
-    margin: 32px 0;
-}
-
-article h2 {
-    margin: 0 0 16px 0;
-}
-
-.description {
-    margin-bottom: 16px;
-}
-
-</style>

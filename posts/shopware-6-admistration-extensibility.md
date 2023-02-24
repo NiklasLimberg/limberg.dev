@@ -1,31 +1,33 @@
 ---
-title: A detailed look at what makes the Shopware administration extensible
-description: A post about how the Shopware 6 Administration works under the hood
-date: 2023-02-17
+title: A deep dive into the plugin system of the Shopware 6 Administration 
+description: A detailed exploration of the Shopware 6 Vue component pipeline. From component configurations, overrides, and extensions to full Vue components
+date: 2023-02-24
 ---
 <script>
 import Header from '$lib/components/Header.svelte'
 import InfoBox from '$lib/components/InfoBox.svelte'
-
+import Image from '$lib/components/Image.svelte'
 </script>
 
 <Header>
 
-The Shopware 6 administration is not a normal Vue application, because it allows overriding and extending of nearly all parts of the application. This blog post explores the inner workings of the shopware component pipeline, from registering components and component overrides to the Vue component configuration that is passed into Vue.
+The Shopware 6 administration has some unique capabilities compared to other [Vue](https://v2.vuejs.org/) applications. It allows plugin authors to customize every part of the administration by overriding or extending existing components.
+This blog post explores the inner workings of the Shopware component pipeline, from registering components and component overrides to the Vue component configuration that is passed into Vue.
 
-Our journey starts at registering a simple Vue component, then we will extend the component, and then finally we will extend the component to build a Fizz buzz component. Admittedly, this is a contrived example, but it showcases the capabilities of the plugin system.
+Our journey starts at registering a simple Vue component, then we will override and extend the Vue component to showcase the capabilities of the plugin system.
 
 <InfoBox>
 
-This blog post just glosses over the fact that components can be loaded asynchronously on demand, with the introduction of the `async-component-library`. So everything described here is in reality a bit more complicated.
+This blog post just glosses over the fact that components are loaded asynchronously on demand, with the introduction of the `async-component-library`. So everything described here is in reality a bit more complicated.
 
 </InfoBox>
+
 
 </Header>
 
 ## The protagonists
 
-The shopware component pipeline consists of 3 protagonists: the component factory, the template factory and the Vue adapter.
+The Shopware component pipeline consists of three protagonists: the component factory, the template factory and the Vue adapter.
 
 ### The component factory
 
@@ -41,7 +43,7 @@ interface ComponentConfig<V extends Vue = Vue> extends ComponentOptions<V> {
 }
 ```
 
-The `ComponentConfig` type is largely just the default `ComponentOptions` type from Vue with a bit of special sauce on top, needed to resolve the overrides and extensions.
+The `ComponentConfig` type is largely just the default `ComponentOptions` type from Vue with a bit of special sauce on top, necessary to resolve the overrides and extensions.
 
 The journey of every component, override, and component extension starts here.
 
@@ -51,7 +53,7 @@ The template factory receives the templates from the component factory, keeps tr
 
 It stores template configurations in a Map with the following data structure:
 
-```typescript=.d.ts
+```typescript
 interface Template {
 	name: string,
 	raw: string,
@@ -63,19 +65,11 @@ interface Template {
 }
 ```
 
-<InfoBox>
-
-Twig.js is pretty overkill for this application, where it's just used for having a way to override parts of templates. I'm thinking about replacing it with a lighter, homegrown alternative that doesn't have the baggage of being a full templating engine with conditionals and loops.
-
-If your plugin would break without the full features of Twig.js, please [shoot me an email](mailto:niklas@limberg.dev)
-
-</InfoBox>
-
 ### The Vue adapter
 
-The Vue  Adapter bridges the gap from the component factory to the Vue instance.
+The Vue Adapter bridges the gap from the component factory to the Vue instance.
 
-It triggers the rendering of all component templates, gathers all component configurations and converts them to Vue asynchronous components.
+It triggers the compilation of all component templates, gathers all component configurations and converts them to Vue asynchronous components.
 
 
 ## The Fizz Buzz example
@@ -86,13 +80,13 @@ Now on to an example. First, we will register a simple counter component. Then w
 
 First off, let's create a template to be used for our basic counter:
 
-```twig=base-counter-template.html.twig
-{% block couter_container %}
+```html=base-counter-template.html.twig
+{% block counter_container %}
 <div>
 	<div>Count: {{ count }}</div>
 
 	<div>
-    	{% block couter_controlls %}
+    	{% block counter_controls %}
 
     	{% block increment_button %}
     	<button @click="increment">
@@ -127,40 +121,39 @@ Shopware.Component.register('counter', {
     	},
 	},
 });
-
 ```
 
 <InfoBox>
 
-You need to also import this TypeScript file somewhere and put it in an existing template somewhere, either by extending a component or simply editing an existing template directly.
+You need to also import this TypeScript file somewhere and use the component in an existing template, either by extending a component or simply editing an existing template directly.
 
 </InfoBox>
 
-Ok, this was simple enough, but what does it do under the hood.
+Now that we have added our base component, we will look at what does it do under the hood.
 
-![Diagram showing the flow of the Shopware.Component.register function](https://md.sw-bench.de/uploads/da2b9572-2573-472a-8e3a-5847032709da.svg)
+<Image src="/img/shopware-6-plugin-system-deep-dive/component-register-flow.png" altSrc="/img/shopware-6-plugin-system-deep-dive/component-register-flow.webp" alt="Diagram showing the flow of the Shopware.Component.register function" />
 
 `Shopware.Component.register()` checks in the map whether a component with the same name already exists and throws an error if so.
 
-Then it extracts the template from the template key in the ComponentConfig and hands it over to the template factory with the `registerComponentTemplate` function. This then creates the following entry in the template registry:
+Then it extracts the template from the template key in the component config and hands it over to the template factory with the `registerComponentTemplate` function. This then creates the following entry in the template registry:
 
-```javascript=
+```javascript
 const templateConfig: Template = {
 	name: 'counter',
 	raw: '<stringifyed twig template>',
-	extend: '', // todo: check if this is actually false and not just an empty string
+	extend: null,
 	overrides: [],
 }
 ```
 
-Finally, the `template` property is deleted from the component config and the rest of the `componentConfig` is then added to the `componentRegistry`
+Finally, the `template` property is deleted from the component config and the rest of the component config is then added to the `componentRegistry`
 
 ### Overriding components
 
-Now we will override the `couter_controlls` twig block and add a `decerment` button:
+Now we will override the `counter_controls` twig block and add a `decrement` button:
 
-```twig=counter-override.html.twig
-{% block couter_controlls %}
+```html=counter-override.html.twig
+{% block counter_controls %}
 {% parent() %}
 
 <button @click="decrement">Decrement</button>
@@ -170,7 +163,7 @@ Now we will override the `couter_controlls` twig block and add a `decerment` but
 We will then register our template override and add a `decrement` method:
 
 ```javascript=counter-override.js
-import template from './counter-overide-template.html.twig';
+import template from './counter-override-template.html.twig';
 
 Shopware.Component.override('counter', {
 	template,
@@ -183,21 +176,21 @@ Shopware.Component.override('counter', {
 });
 ```
 
-The file extension `.js` here is not a mistake. TypeScript doesn't know about the `ComponentConfig` of the `counter` component we are overriding, which would then throw a bunch of errors. Well, and it kind of can't, because our override could be one in a chain of overrides. So the `ComponentConfig` partially depends on where it is in the override chain and what those overrides add to the `ComponentConfig` our override builds upon.
+The file extension `.js` here is not a mistake. TypeScript doesn't know about the `ComponentConfig` type of the `counter` component we are overriding and would then throw a bunch of errors. Well, and it kind of can't, because our override could be one in a chain of overrides. So the `ComponentConfig` type partially depends on where it is in the override chain and how those previous overrides potentially change the component config we then our  override on.
 
-We could write a clever TypeScript type to resolve the `ComponentConfig` if we knew our location in the override chain, but sadly we can't because it depends on several factors like the order in which the `Shopware.Component.override()` is called.
+We could write a clever TypeScript type to resolve the `ComponentConfig` if we knew our location in the override chain, but sadly we can't because it depends on several factors like the order in which the `Shopware.Component.override()` function is called.
 
-![Diagram showing the flow of the Shopware.Component.override function](https://md.sw-bench.de/uploads/a33deb76-0d0a-4b0a-ae7c-2ae19c9ea8a9.svg)
+<Image src="/img/shopware-6-plugin-system-deep-dive/component-override-flow.png" altSrc="/img/shopware-6-plugin-system-deep-dive/component-override-flow.webp" alt="Diagram showing the flow of the Shopware.Component.override function" />
 
-If `Shopware.Component.override()` does not find an existing override config, then creates a new entry in the `componentOverride` with the value `[ComponentConfig]`. Otherwise, `ComponentConfig` is just pushed to the end of the array.
+`Shopware.Component.override()` first tries to find existing overrides for the given component to push the `componentConfig` into the override stack. If it does not find a matching entry in the `overrideRegistry` then it creates one and initializes it with an array consisting of the `componentConfig`.
 
-Then it calls `registerOverride`, which then either creates a new `Tempalte` object if none exists with:
+Then it calls `registerOverride`, which then either creates a new `Template` object if none exists with:
 
 ```javascript
-{
+const template: Template = {
 	name: 'counter',
 	raw: '',
-	extend: '', // todo: check if this is actually false and not just an empty string
+	extend: null,
 	overrides: [{
     	raw: '<override template string>',
     	index: null
@@ -207,16 +200,16 @@ Then it calls `registerOverride`, which then either creates a new `Tempalte` obj
 
 Otherwise, it pushes `{ raw: '<override template string>', index: null}` to the end of the overrides array.
 
-It creates new entries in the `tempalteRegistry`, because the base template could be added later than the override template.
+It creates new entries in the `templateRegistry`, because the base template could be added later than the override template.
 
 ### Extending the components
 
 Now on to our last showcase of the plugin system. Extending components works a little differently from adding overrides: Instead of modifying existing components, it copies the configuration including the template to a new entry in the component registry and then puts our component configuration on top.
 
-Let's illustrate this, by adding Fizz Buzz based on the `counter` data property to our component.
+Let's illustrate this, by displaying Fizz Buzz based on the `counter` data property. Here is the template:
 
-```twig=template.html.twig
-{% block couter_container_inner %}
+```html=fizz-buzz-template.html.twig
+{% block counter_container_inner %}
 <div>
 	{% parent() %}
 	{{ fizzBuzz }}
@@ -224,10 +217,10 @@ Let's illustrate this, by adding Fizz Buzz based on the `counter` data property 
 {% endblock %}
 ```
 
-Now we will register the extension.
+And the corresponding script that registers the override:
 
 ```javascript=fizz-buzz.js
-import template from './template.html.twig';
+import template from './fizz-buzz-template.html.twig';
 
 Shopware.Component.extend('fizz-buzz', 'counter', {
 	template,
@@ -257,26 +250,26 @@ Shopware.Component.extend('fizz-buzz', 'counter', {
 
 This results in the following data flow:
 
-![Diagram showing the flow of the Shopware.Component.extend function](https://md.sw-bench.de/uploads/ddf674cb-ced0-4fa8-9f43-a69b482e637a.svg)
+<Image src="/img/shopware-6-plugin-system-deep-dive/component-extend-flow.png" altSrc="/img/shopware-6-plugin-system-deep-dive/component-extend-flow.webp" alt="Diagram showing the flow of the Shopware.Component.extend function" />
 
 As mentioned before, component extensions create a new entry in the component library with a reference to the base component. This then look something like:
 
 ```typescript=
-const componentRegistryEntry: ComponentConfig = {
+const componentConfig: ComponentConfig {
 	...componentConfig, // the passed in component config without the template
-	functional: null, // todo check this
+	functional: false,
 	extends: 'counter',
-	_isOverride: false, // todo check this
+	_isOverride: false,
 }
 ```
 
 Then it adds the following entry to the template repository:
 
-```typescript=
-const templateConfig: Template = {
+```typescript
+const template: Template {
 	name: 'fizz-buzz',
 	raw: '<stringifyed twig template>',
-	extend: '', // todo: check if this is actually false and not just an empty string
+	extend: '',
 	overrides: [],
 }
 ```
@@ -287,9 +280,9 @@ The new component configuration resolves the overrides first if there were overr
 
 In the examples before, we were just adding methods without overriding existing methods, but what happens if we were to do so?
 
-Then it builds a quite crude call stack, by iterating over all the overrides. It starts with the override that was added last and ends with the base component. The override that was added last gets the base method name, and every following override gets a hashtag added to the front of the method name. This leads to the last override being called first and the base method being called last.
+The Administration then builds a virtual call stack allowing us, to intervene before and after the next function in the call stack is called. It builds a call stack, by iterating over all the overrides, starting with the override that was added last and ending with the base component. The override that was added last gets the base method name, and every following override gets a hashtag added to the front of the method name. This leads to the last override being called first and the base method being called last.
 
-Each override needs to call `this.$super('< method-name> ')` at least once to call the next method in the chain. `$super()` also returns the return value of the next method in the chain.
+Each override needs to call `this.$super('< method-name> ')` once to call the next method in the chain. `$super()` also returns the return value of the next method in the chain.
 
 Let's see virtual call stack in action with the following example:
 
@@ -404,31 +397,7 @@ end of override 2
 end of extension
 ```
 
-This whole thing is quite complicated, but it allows us to intervene before and after the next function in the call stack is called, and admittedly it works quite well. As long as `$super()` is being called synchronously, but more on that in [Appendix 1: The limitations of the virtual call stack](#Appendix-1-The-limitations-of-the-virtual-call-stack)
-
-## The Vue Adapter
-
-Now that we have explored how Vue components get registered in the shopware administration, we will take a look at the last leg to becoming a real functional Vue components. The Vue adapter is the glue between the component factory, the template factory and Vue.
-
-It instructs the component factory to build the component config for each component based on the previously registered component configs and their overrides. Components created by extending another trigger the build of the component they depend on first, and then they will lay their customizations on top, as described in the previous chapter.
-
-After every component is build, it instructs the template registry to render all the templates with `Twig.js`. This process happens in a similar vain to building components, first overrides are getting rendered in the order they were added, and then component extensions get rendered on top. This then produces the basic `HTML` template you know from Vue single file components.
-
-And that's it we now have basic Vue components and their corresponding template, that we can just pass in to Vue.
-
-## The road ahead
-
-I hope this blog posts gave you insights into what shopware does to allow extensions to customize the administration.
-
-It definitely has its problems and oversights that we will get into later, but works quite well for what it was build for back in 2020. When Vue 2 was still kind of new and TypeScript was only used by Hipsters *such as myself*.
-
-This kind of changed with the continued adoption of TypeScript and the release of Vue 3 and its `Compostion` API.
-
-TypeScript was introduced in 2022 into the administration, but just can not help when the existing plugin system is used because of its unpredictability. We could partially fix this by just providing types for the base component of the override/extension, but those types could also lie to you when other plugins are installed, which then potentially change the return type of whatever you are overriding.
-
-This approach of merging `options API` based component configurations works quite well and would probably still work in Vue 3 with minor changes. That is because they are still just plain objects before they get passed into Vue.
-
-## Appendix 1: The limitations of the virtual call stack
+### The limitations of the virtual call stack
 
 The virtual call stack works great as long as `$super()` is being called synchronously. It however breaks down completely if `$super()` is called asynchronously.
 
@@ -450,7 +419,9 @@ Shopware.Component.override('counter', {
 });
 ```
 
-So the only thing that has changed is that we are now returning a Promise and then calling `$super()` after a one-second delay, but if we look at the output we can quickly see that it ends up in an infinite loop:
+So the only thing that has changed is that we are now returning a Promise and then calling `$super()` after a one-second delay. 
+
+If we look at the output, we can quickly see that it ends up in an infinite loop:
 
 ```text=
 start of extension
@@ -525,4 +496,26 @@ Shopware.Component.override('counter', {
 });
 ```
 
-This is a dirty hack, but fixing this in shopware would break plugins.
+This is a dirty hack, but fixing this in Shopware would break plugins.
+
+## The Vue Adapter
+
+Now that we have explored how Vue components get registered in the Shopware administration, we will take a look at the last stop to becoming a real functional Vue components. The Vue adapter is the glue between the component factory, the template factory and Vue.
+
+It instructs the component factory to build the component config for each component based on the previously registered component configs and their overrides. Components created by extending another trigger the build of the component they depend on first, and then they will lay their customizations on top, as described in the previous chapter.
+
+After every component is build, it instructs the template registry to render all the templates with `Twig.js`. This process happens similarly to building components, first overrides are getting rendered in the order they were added, and then component extensions get rendered on top. This then produces the basic `HTML` template you know from Vue single file components.
+
+It then passes the complied template and resolved component configuration into Vue to create normal Vue components. 
+
+And that is it, the normal Vue components can now be registered to base Vue application like any other Vue component.
+
+## Conclusion
+
+I hope this blog posts gave you insights into what Shopware does to allow plugins to customize the administration.
+
+It’s pretty robust and gives plugins authors a lot of leeway. They have the ability to override and customize almost everything in the administration. While being relatively easy to understand with a bit of Vue knowledge.
+
+The only problem this plugin system has for you as a developer is that it is not providing types for the components you are basing your overrides or extensions on. This is because of the previously discussed unpredictability of the order of overrides. The only thing we could do here is to provide types for the base components, but those types could also lie to you when other plugins are installed.
+
+This approach of providing extensibility will probably still work with the Vue 3 Options API with just minor changes, because components in Vue 3 are just plain objects before they get passed into Vue.

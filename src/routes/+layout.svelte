@@ -22,10 +22,6 @@
   .full-bleed-wrapper > * {
     grid-column: 2;
   }
-  :global(.full-bleed) {
-    width: 100%;
-    grid-column: 1 / 4;
-  }
 
   nav {
     margin-top: 32px;

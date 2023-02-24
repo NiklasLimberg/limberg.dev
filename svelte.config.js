@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-cloudflare';
 import { vitePreprocess } from '@sveltejs/kit/vite';
 import { mdsvex } from 'mdsvex';
 
@@ -26,7 +26,7 @@ export default {
         vitePreprocess(),
         mdsvex({
             extension: '.md',
-            remarkPlugins: [ remarkSections],
+            remarkPlugins: [remarkSections],
             rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, {behavior: 'wrap'} ]],
             highlight: {
                 async highlighter(code, langAndPath) {            

@@ -12,8 +12,6 @@
 
 </script>
 
-
-
 <header>
     <h1>{title}</h1>
     <div class="publishedDate">Published {publishedDate}</div>
