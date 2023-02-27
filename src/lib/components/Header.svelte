@@ -20,6 +20,9 @@
 </header>
 
 <style>
+    h1 {
+        margin-top: 0;
+    }
     .publishedDate {
         font-size: 0.8em;
         color: #666;

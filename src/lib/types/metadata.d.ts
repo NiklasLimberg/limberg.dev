@@ -3,4 +3,5 @@ export interface Metadata {
     description: string;
     date: string;
     tags: string[];
+    toc: {text: string, slug: number}[];
 }
