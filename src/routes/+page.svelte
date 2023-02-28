@@ -55,7 +55,6 @@
     </footer>
 </div>
 
-
 <style>
     .center {
         margin: 0 auto;

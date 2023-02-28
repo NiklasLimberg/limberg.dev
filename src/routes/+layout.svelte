@@ -11,6 +11,10 @@
         margin: 16px 0;
     }
 
+    nav a:hover {
+        background: inherit;
+    }
+
     @media (min-width: 600px) {
         nav {
             margin: 16px 32px;

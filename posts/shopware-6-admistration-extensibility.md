@@ -9,7 +9,7 @@ import InfoBox from '$lib/components/InfoBox.svelte'
 import Image from '$lib/components/Image.svelte'
 </script>
 
-<Header>
+<Header metadata="{metadata}">
 
 The Shopware 6 administration has some unique capabilities compared to other [Vue](https://v2.vuejs.org/) applications. It allows plugin authors to customize every part of the administration by overriding or extending existing components.
 This blog post explores the inner workings of the Shopware component pipeline, from registering components and component overrides to the Vue component configuration that is passed into Vue.

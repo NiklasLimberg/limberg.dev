@@ -5,7 +5,7 @@
 </script>
 
 <nav>
-    <h2>Table of Contents</h2>
+    <div class="toc-heading">Table of Contents</div>
     <ol>
         {#each toc as item}
             <li>
@@ -20,6 +20,13 @@
         position: sticky;
         top: 100px;
         padding-left: 40px;
+        width: 30ch;
+    }
+
+    .toc-heading {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 6px;
     }
 
     ol {
@@ -28,6 +35,6 @@
     }
 
     ol li {
-        margin-bottom: 4px;
+        margin-bottom: 6px;
     }
 </style>

@@ -22,6 +22,15 @@ function transform(tree, file) {
                 },
             };
 
+            const textNode = node.children[0];
+            node.children = [
+                {
+                    type: 'link',
+                    url: `#${slug}`,
+                    children: [textNode],
+                },
+            ];
+
             if (node.depth === 2) {
                 headings.push({
                     text: text,

@@ -3,8 +3,6 @@ import { vitePreprocess } from '@sveltejs/kit/vite';
 import { mdsvex } from 'mdsvex';
 
 import { remarkSections } from './remark-plugins/sectionize.js';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import headingConvert from './rehype-plugins/headline-convert.js';
 import { buildToc } from './remark-plugins/extract-toc.js';
 
 import Prism from 'prismjs';

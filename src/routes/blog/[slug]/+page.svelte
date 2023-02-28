@@ -1,14 +1,11 @@
 <script lang="ts">
     import type { PageData } from './$types';
-    import { metadata_store } from '$lib/store/metadata';
     import TableOfContents from '$lib/components/TableOfContents.svelte';
 
     import 'prismjs/themes/prism.css';
     import '$lib/styles/code.css';
 
     export let data: PageData;
-    
-    metadata_store.set(data.metadata);
 </script>
 
 <svelte:head>
@@ -16,7 +13,7 @@
     <meta name="description" content={data.metadata.description} />
 </svelte:head>
 
-<div class="article-wrapper">
+<div class="article-wrapper article">
     <aside class="toc">
         <TableOfContents toc={data.metadata.toc} />
     </aside>
@@ -38,9 +35,23 @@
         margin-bottom: 8px;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 900px) {
         .toc {
             display: none;
         }
+    }
+
+    :global(.article h1:hover > a, .article h2:hover > a, .article h3:hover > a,
+     .article h4:hover > a, .article h5:hover > a, .article h6:hover > a) {
+        text-decoration: underline;
+    }
+
+    :global(.article h1:hover > a::after, .article h2:hover > a::after, 
+    .article h3:hover > a::after, .article h4:hover > a::after,
+    .article h5:hover > a::after, .article h6:hover > a::after)   {
+        content: '#';
+        display: inline-block;
+        text-decoration: none;
+        padding: 0 8px;
     }
 </style>
