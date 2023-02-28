@@ -9,7 +9,7 @@ import InfoBox from '$lib/components/InfoBox.svelte'
 import Image from '$lib/components/Image.svelte'
 </script>
 
-<Header>
+<Header metadata="{metadata}">
 
 The Shopware 6 administration has some unique capabilities compared to other [Vue](https://v2.vuejs.org/) applications. It allows plugin authors to customize every part of the administration by overriding or extending existing components.
 This blog post explores the inner workings of the Shopware component pipeline, from registering components and component overrides to the Vue component configuration that is passed into Vue.
@@ -76,7 +76,7 @@ It triggers the compilation of all component templates, gathers all component co
 
 Now on to an example. First, we will register a simple counter component. Then we will override it to this component with a decrement button. Finally, we will extend the counter print Fizz if the count is even and Buzz if the count is divisible by 3.
 
-### Registering the basic counter
+## Registering the basic counter
 
 First off, let's create a template to be used for our basic counter:
 
@@ -148,7 +148,7 @@ const templateConfig: Template = {
 
 Finally, the `template` property is deleted from the component config and the rest of the component config is then added to the `componentRegistry`
 
-### Overriding components
+## Overriding components
 
 Now we will override the `counter_controls` twig block and add a `decrement` button:
 
@@ -202,7 +202,7 @@ Otherwise, it pushes `{ raw: '<override template string>', index: null}` to the 
 
 It creates new entries in the `templateRegistry`, because the base template could be added later than the override template.
 
-### Extending the components
+## Extending the components
 
 Now on to our last showcase of the plugin system. Extending components works a little differently from adding overrides: Instead of modifying existing components, it copies the configuration including the template to a new entry in the component registry and then puts our component configuration on top.
 
@@ -276,7 +276,7 @@ const template: Template {
 
 The new component configuration resolves the overrides first if there were overrides applied to it, and then it gets layered on top of the resolved base component configuration.
 
-### The virtual call stack
+## The virtual call stack
 
 In the examples before, we were just adding methods without overriding existing methods, but what happens if we were to do so?
 
@@ -397,7 +397,7 @@ end of override 2
 end of extension
 ```
 
-### The limitations of the virtual call stack
+## The limitations of the virtual call stack
 
 The virtual call stack works great as long as `$super()` is being called synchronously. It however breaks down completely if `$super()` is called asynchronously.
 

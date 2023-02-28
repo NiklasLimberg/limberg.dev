@@ -1,32 +1,30 @@
-<div class="full-bleed-wrapper">
-    <div>
-        <nav>
-            <a href="/">Home</a>
-            <a href="/blog">Blog</a>
-        </nav>
-        <slot />
-    </div>
-    <footer>
-        <p>©2023 Niklas Limberg.</p>
-    </footer>
-</div>
+<nav>
+    <a href="/">limberg.dev</a>
+</nav>
+<slot />
 
 <style>
-  .full-bleed-wrapper {
-    display: grid;
-    grid-template-columns:
-      1fr
-      min(65ch, 100%)
-      1fr;
-  }
-  .full-bleed-wrapper > * {
-    grid-column: 2;
-  }
+    nav {  
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 16px 0;
+    }
 
-  nav {
-    margin-top: 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+    nav a:hover {
+        background: inherit;
+    }
+
+    @media (min-width: 600px) {
+        nav {
+            margin: 16px 32px;
+        }
+    }
+
+    nav a {
+        text-decoration: none;
+        color: #333;
+        font-size: 1.5rem;
+        font-weight: 200;   
+    }
 </style>

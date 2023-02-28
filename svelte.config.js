@@ -3,8 +3,7 @@ import { vitePreprocess } from '@sveltejs/kit/vite';
 import { mdsvex } from 'mdsvex';
 
 import { remarkSections } from './remark-plugins/sectionize.js';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypeSlug from 'rehype-slug';
+import { buildToc } from './remark-plugins/extract-toc.js';
 
 import Prism from 'prismjs';
 import loadLanguages from 'prismjs/components/index.js';
@@ -26,8 +25,7 @@ export default {
         vitePreprocess(),
         mdsvex({
             extension: '.md',
-            remarkPlugins: [remarkSections],
-            rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, {behavior: 'wrap'} ]],
+            remarkPlugins: [remarkSections, buildToc],
             highlight: {
                 async highlighter(code, langAndPath) {            
                     const [lang, path] = langAndPath.split('=');
