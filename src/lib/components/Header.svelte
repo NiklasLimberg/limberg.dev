@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Metadata  } from '$lib/types/metadata';
     import { formatDate } from '$lib/formater/date';
-    
+
     export let metadata: Metadata;
 </script>
 
@@ -48,11 +48,11 @@
     summary {
         list-style: none;
     }
-    
+
     .toc-list {
         margin-top: 8px;
     }
-    
+
     details summary::after {
         display: inline-block;
         vertical-align: text-top;
@@ -60,7 +60,7 @@
         font-size: 12px;
         content: '▼';
     }
-    
+
     details[open] summary::after {
         content: '▲';
     }

@@ -23,7 +23,7 @@
         left: 50%;
         margin-left: -50vw;
     }
-    
+
     .wrapper-flex {
         margin: 32px;
         display: flex;

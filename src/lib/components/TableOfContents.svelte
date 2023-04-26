@@ -22,13 +22,13 @@
         top: 100px;
         padding-left: 40px;
     }
-    
+
     .toc-heading {
         font-size: 1.2rem;
         font-weight: bold;
         margin-bottom: 6px;
     }
-    
+
     ol {
         list-style: none;
         padding: 0;
@@ -38,7 +38,7 @@
         border-left:  2px solid #f8f6f6;
         width: 30ch;
     }
-    
+
     li.current {
         border-left-color: #07a;
         background-color: #f8f6f6;

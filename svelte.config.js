@@ -27,12 +27,12 @@ export default {
             extension: '.md',
             remarkPlugins: [remarkSections, buildToc],
             highlight: {
-                async highlighter(code, langAndPath) {            
+                async highlighter(code, langAndPath) {
                     const [lang, path] = langAndPath.split('=');
 
                     const pathDiv = path ? `<div class="path">${path}</div>` : '';
                     const html = escapeHtml(Prism.highlight(code, Prism.languages[lang], lang));
-                    
+
                     return `<pre class="prismjs">${pathDiv}<code class="language-${lang}">${html}</code></pre>`;
                 },
             },

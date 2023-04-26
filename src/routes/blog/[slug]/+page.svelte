@@ -3,7 +3,7 @@
     import TableOfContents from '$lib/components/TableOfContents.svelte';
     import { browser } from '$app/environment';
     import { onMount } from 'svelte';
-    
+
     import 'prismjs/themes/prism.css';
     import '$lib/styles/code.css';
 
@@ -11,14 +11,19 @@
 
     const tableOfContents = data.metadata.toc;
     let currentHeadlineSlug = '';
-    
+
     const sectionHeadlines: Element[] = [];
 
-    function findCurrentHeadline () {
+    function findCurrentHeadline() {
         let lastHeadlineBelowFold = sectionHeadlines[0];
-        
+
+        if(window.scrollY + window.innerHeight + 50 > document.body.scrollHeight) {
+            currentHeadlineSlug = sectionHeadlines.at(-1)?.id ?? '';
+            return;
+        }
+
         for(const headline of sectionHeadlines) {
-            if (headline.getBoundingClientRect().top - 100 > 0 ) {
+            if (headline.getBoundingClientRect().top - 100 > 0) {
                 break;
             }
 
@@ -31,12 +36,12 @@
     if(browser) {
         for(let headline of tableOfContents) {
             const headlineElement = document.getElementById(headline.slug);
-            
+
             if(headlineElement) {
                 sectionHeadlines.push(headlineElement);
             }
         }
-        
+
         onMount(() => findCurrentHeadline());
         window.onscroll = findCurrentHeadline;
     }
@@ -80,7 +85,7 @@
         text-decoration: underline;
     }
 
-    :global(.article h1:hover > a::after, .article h2:hover > a::after, 
+    :global(.article h1:hover > a::after, .article h2:hover > a::after,
     .article h3:hover > a::after, .article h4:hover > a::after,
     .article h5:hover > a::after, .article h6:hover > a::after)   {
         content: '#';
