@@ -131,7 +131,7 @@ You need to also import this TypeScript file somewhere and use the component in 
 
 Now that we have added our base component, we will look at what does it do under the hood.
 
-<Image src="/img/shopware-6-plugin-system-deep-dive/component-register-flow.png" altSrc="/img/shopware-6-plugin-system-deep-dive/component-register-flow.webp" alt="Diagram showing the flow of the Shopware.Component.register function" />
+<Image src="/img/shopware-6-plugin-system-deep-dive/component-register-flow.png" altSrc="/img/shopware-6-plugin-system-deep-dive/component-register-flow.webp" alt="Diagram showing the flow of the Shopware.Component.register function" width="1200" height="522" />
 
 `Shopware.Component.register()` checks in the map whether a component with the same name already exists and throws an error if so.
 
@@ -140,7 +140,7 @@ Then it extracts the template from the template key in the component config and 
 ```javascript
 const templateConfig: Template = {
 	name: 'counter',
-	raw: '<stringifyed twig template>',
+	raw: '<stringified twig template>',
 	extend: null,
 	overrides: [],
 }
@@ -180,7 +180,7 @@ The file extension `.js` here is not a mistake. TypeScript doesn't know about th
 
 We could write a clever TypeScript type to resolve the `ComponentConfig` if we knew our location in the override chain, but sadly we can't because it depends on several factors like the order in which the `Shopware.Component.override()` function is called.
 
-<Image src="/img/shopware-6-plugin-system-deep-dive/component-override-flow.png" altSrc="/img/shopware-6-plugin-system-deep-dive/component-override-flow.webp" alt="Diagram showing the flow of the Shopware.Component.override function" />
+<Image src="/img/shopware-6-plugin-system-deep-dive/component-override-flow.png" altSrc="/img/shopware-6-plugin-system-deep-dive/component-override-flow.webp" alt="Diagram showing the flow of the Shopware.Component.override function" width="1197" height="522" />
 
 `Shopware.Component.override()` first tries to find existing overrides for the given component to push the `componentConfig` into the override stack. If it does not find a matching entry in the `overrideRegistry` then it creates one and initializes it with an array consisting of the `componentConfig`.
 
@@ -250,7 +250,7 @@ Shopware.Component.extend('fizz-buzz', 'counter', {
 
 This results in the following data flow:
 
-<Image src="/img/shopware-6-plugin-system-deep-dive/component-extend-flow.png" altSrc="/img/shopware-6-plugin-system-deep-dive/component-extend-flow.webp" alt="Diagram showing the flow of the Shopware.Component.extend function" />
+<Image src="/img/shopware-6-plugin-system-deep-dive/component-extend-flow.png" altSrc="/img/shopware-6-plugin-system-deep-dive/component-extend-flow.webp" alt="Diagram showing the flow of the Shopware.Component.extend function" width="1200" height="400" />
 
 As mentioned before, component extensions create a new entry in the component library with a reference to the base component. This then look something like:
 

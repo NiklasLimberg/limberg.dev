@@ -29,11 +29,11 @@
         padding: 16px;
         margin: 16px 0;
     }
-    
+
     article h2 {
         margin: 0 0 16px 0;
     }
-    
+
     .description {
         margin-bottom: 16px;
     }

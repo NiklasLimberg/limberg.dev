@@ -1,6 +1,7 @@
 <script lang="ts">
     export let src: string;
     export let altSrc: string|undefined;
+    export let width: number;
     export let height: number;
     export let alt: string;
 </script>
@@ -11,7 +12,7 @@
             {#if altSrc}
                 <source srcset="{altSrc}">
             {/if}
-            <img src="{src}" alt="{alt}" height="{height}" loading="lazy">
+            <img src="{src}" alt="{alt}" width="{width}" height="{height}" loading="lazy">
         </picture>
     </div>
 </div>
@@ -23,7 +24,7 @@
         left: 50%;
         margin-left: -50vw;
     }
-    
+
     .wrapper-flex {
         margin: 32px;
         display: flex;
