@@ -1,6 +1,6 @@
 ---
-title: 1Password SSH Keys in WSL2
-description: A short guide on how to use SSH keys stored 1Password in WSL2
+title: 1Password SSH Keys in WSL 2
+description: A short guide on how to use SSH keys stored 1Password in WSL 2
 date: 2023-06-11
 ---
 <script>
@@ -11,82 +11,93 @@ import Image from '$lib/components/Image.svelte'
 
 <Header metadata="{metadata}">
 
-This guide explains how to set up WSL2 to use SSH keys stored in 1Password to authenticate to ssh servers and to sign git commits.
+This guide explains how to set up WSL 2 to use SSH keys stored in 1Password to authenticate to ssh servers and to sign git commits.
 
-<Image src="/img/1password-ssh-keys-in-wsl2/ssh-auth-socket-flow.png" altSrc="/img/1password-ssh-keys-in-wsl2/ssh-auth-socket-flow.webp" alt="Diagram showing the flow of an application requesting a SSH key" width="815" height="612" /> 
+<Image src="/img/1password-ssh-keys-in-wsl2/ssh-auth-socket-flow.png" altSrc="/img/1password-ssh-keys-in-wsl2/ssh-auth-socket-flow.webp" alt="Diagram showing the flow of an application requesting a SSH key" width="815" height="612" loading="eager" /> 
 
 </Header>
 
 ## Parts list
 
-* [1Password ](https://1password.com/)the password manger that stores the keys
+* [1Password](https://1password.com/) the password manger that stores the keys
 * [1Password SSH agent](https://developer.1password.com/docs/ssh/agent/#:~:text=The%201Password%20SSH%20agent%20uses,even%20leaves%20the%201Password%20app.) for retrieving the keys from 1Password
-* [npiperelay](https://github.com/jstarks/npiperelay) for accessing Windows named pipes from WSL2
+* [npiperelay](https://github.com/jstarks/npiperelay) for accessing Windows named pipes from WSL 2
 * [socat](http://www.dest-unreach.org/socat/) for exposing the pipe to the SSH key as socket file
 * [Systemd](https://systemd.io/) for managing the tunnel to 1Password on the windows side 
 
 ## Enabling the SSH agent
 
-Our keys are stored in 1Password, so we need to somehow communicate to it to retrieve our keys. Luckily, 1Password provides a first party SSH agent that manages access to our keys and provides a secure way to access them. The 1Password SSH agent is not enabled by default, so we need to enable it manually.
+1password has an SSH agent that we can use to get our SSH keys from the password manager. The SSH agent controls who can use our SSH keys and asks us for permission every time a program wants to use the keys.
+
+The 1password SSH agent is not enabled by default, so we need to enable it manually.
 
 <Image src="/img/1password-ssh-keys-in-wsl2/1password-ssh-agent-settings.png" altSrc="/img/1password-ssh-keys-in-wsl2/1password-ssh-agent-settings.webp" alt="A screenshot of the ssh settings page in the developer settings" width="756" height="558" /> 
 
 <InfoBox>
+
 Make sure to enable the “use the SSH agent” checkbox in the Developer category.
 
 </InfoBox>
 
 ## Installing npiperelay 
 
-Now that we have enabled the SSH agent. We need to pipe requests from WSL2 to the SSH agent running on the windows side. This is where npiperelay comes in, it allows us to use Windows named pipes from WSL and with that our SSH agent.
+Now that the SSH agent has been enabled, we need a program to pipe requests from WSL 2 to it. This is where npiperelay comes in, it allows us to use Windows named pipes from WSL 2 and with that our SSH agent.
 
-To install it, download the latest release from their [releases page](https://github.com/jstarks/npiperelay/releases/tag/v0.1.0) and put it somewhere safe on the windows side. I put mine in the path “C:\Windows\System32\npiperelay.exe”, but you can put it everywhere. You just need to be able to build a path from one of the partition mounts under “/mnt” in WSL2.
-
+To install it, download the latest release from their releases page and put it somewhere safe on the windows side. I put mine in the path `C:\Windows\System32\npiperelay.exe`, but you can put it everywhere. You just need to be able to build a path from one of the partition mounts under `/mnt` in WSL 2.
 
 ## Installing socat
 
-Socat will be used to expose our SSH agent through npiperelay to a socket file. Socat can be installed in a myriad of ways, but as I’m using Ubuntu as my Linux distribution, I’ll install it with Ubuntu’s package manager [apt](https://salsa.debian.org/apt-team/apt).
+socat will be used to expose our SSH agent through npiperelay to a socket file. socat can be installed in a myriad of ways, but as I’m using Ubuntu as my Linux distribution, I’ll install it with Ubuntu’s package manager [apt](https://salsa.debian.org/apt-team/apt).
 
-“sudo apt install socat”
-
+```text
+sudo apt install socat
+```
 
 ## Systemd unit
 
-We’ll use systemd to start the tunnel to the 1Password SSH agent running on the windows side, and to start to expose that tunnel as a socket file every time our WSL2 distribution boots up.
+We’ll use systemd to start the tunnel to the 1password SSH agent running on the windows side every time our WSL 2 distribution boots up.
 
 This is the systemd unit I use to manage npiperelay and socat:
 
 
 ```text=~/.config/systemd/user/ssh.service
 [Unit]
-
-Description=SSH Realy
+Description=SSH Relay
 
 [Service]
-
-ExecStartPre=/bin/rm /home/not-root/.ssh/agent.sock
-
+ExecStartPre=/bin/rm -f /home/not-root/.ssh/agent.sock
 ExecStart=/usr/bin/socat UNIX-LISTEN:/home/${username}/.ssh/agent.sock,fork EXEC:"/mnt/c/Windows/system32/npiperelay.exe -ei -s //./pipe/openssh-ssh-agent",nofork
 
 [Install]
-
 WantedBy=default.target
 ```
 
-The unit deletes the previous socket file, then creates a new socket file, and finally builds the bridge from the socket file to the SSH agent running on the Windows side.
+The unit deletes the previous socket file if it exists. Then creates a new socket file with socat and finally builds the bridge with npiperelay from the socket file to the SSH agent running on the Windows side.
 
 Make sure to replace `${username}` with your UNIX username and to adjust the path to your `npiperelay.exe` in the `EXEC` step.
 
-Attention: Don’t forget to enable the unit with: `systemctl --user enable ./ssh.service`
+Next enable the unit with: 
 
-WSL2 got systemd support in fairly recently at the time of writing in [late 2022](https://devblogs.microsoft.com/commandline/systemd-support-is-now-available-in-wsl/).
+```text=
+systemctl --user enable ./ssh.service
+```
 
+And start it with:
+
+```text=
+systemctl --user start ssh
+```
+
+WSL 2 got systemd support in fairly recently at the time of writing in [late 2022](https://devblogs.microsoft.com/commandline/systemd-support-is-now-available-in-wsl/).
+Depending on your WSL 2 distribution, you also need to install `libpam-systemd` manually.
 
 ## Exposing the SSH Auth Socket
 
 Lastly, we need to add the SSH Auth Socket to our environment variables. I’m using bash, so I’ll add the following to my `.bashrc`:
 
-`export SSH_AUTH_SOCK=$HOME/.ssh/agent.sock`
+```text
+export SSH_AUTH_SOCK=$HOME/.ssh/agent.sock
+```
 
 
 ## Testing the SSH key
@@ -115,7 +126,7 @@ I recommend following this guide from 1Password: [Sign Git commits with SSH | 1P
   gpgsign = true
 ```
 
-The only thing we really need from that `.gitconfig` is our signing key, that we then plug into our custom config.
+The only thing we really need from that `.gitconfig` is our signing key, that we then plug into our custom config:
 
 ```text=~/.gitconfig
 [user]

@@ -4,7 +4,7 @@
     export let width: number;
     export let height: number;
     export let alt: string;
-    export let loading: 'lazy'|'eager' = 'eager' ;
+    export let loading: 'lazy'|'eager' = 'lazy' ;
 </script>
 
 <picture>
@@ -14,7 +14,8 @@
     <img src="{src}" alt="{alt}" width="{width}" height="{height}" loading="{loading}">
 </picture>
 
-<style>
+
+<style scoped>
     picture, img {
         height: auto;
     }
