@@ -4,34 +4,19 @@
     export let width: number;
     export let height: number;
     export let alt: string;
+    export let loading: 'lazy'|'eager' = 'lazy' ;
 </script>
 
-<div class="wrapper-absolute">
-    <div class="wrapper-flex">
-        <picture>
-            {#if altSrc}
-                <source srcset="{altSrc}">
-            {/if}
-            <img src="{src}" alt="{alt}" width="{width}" height="{height}" loading="lazy">
-        </picture>
-    </div>
-</div>
+<picture>
+    {#if altSrc}
+        <source srcset="{altSrc}">
+    {/if}
+    <img src="{src}" alt="{alt}" width="{width}" height="{height}" loading="{loading}">
+</picture>
 
-<style>
-    .wrapper-absolute {
-        width: 99vw;
-        position: relative;
-        left: 50%;
-        margin-left: -50vw;
-    }
 
-    .wrapper-flex {
-        margin: 32px;
-        display: flex;
-        justify-content: center;
-    }
-
-    picture {
-        max-width: 100ch;
+<style scoped>
+    picture, img {
+        height: auto;
     }
 </style>
