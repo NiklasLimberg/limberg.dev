@@ -4,7 +4,7 @@
 <slot />
 
 <style>
-    nav {  
+    nav {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -25,6 +25,6 @@
         text-decoration: none;
         color: #333;
         font-size: 1.5rem;
-        font-weight: 200;   
+        font-weight: 200;
     }
 </style>
