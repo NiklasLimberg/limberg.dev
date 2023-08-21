@@ -51,7 +51,14 @@
 
 <svelte:head>
     <title>{data.metadata.title}</title>
-    <meta name="description" content={data.metadata.description} />
+    <meta property="og:title" content="{data.metadata.title}" />
+
+    <meta name="description" content="{data.metadata.description}" />
+    <meta property="og:description " content="{data.metadata.description}" />
+
+    <meta property="og:type" content="article">
+    <meta property="article:author" content="@NiklasLimberg">
+    <meta property="article:published_time" content="{data.metadata.date}">
 </svelte:head>
 
 <div class="article-wrapper article">
