@@ -8,7 +8,7 @@ function transform(tree, file) {
     const headings = [];
 
     slugs.reset();
-    
+
     visit(
         tree,
         node => node.type === 'heading',
@@ -41,7 +41,7 @@ function transform(tree, file) {
     );
 
     let yamlContent = '';
-    
+
     const ymlNode = tree.children[0];
     const hasYaml = ymlNode.type === 'yaml';
 

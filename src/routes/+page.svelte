@@ -16,7 +16,7 @@
     <header>
         <h1>limberg.dev DevBlog</h1>
         <p>Hi, I'm Niklas Limberg and I'm currently working as a software developer at
-            <a href="https://shopware.com/" title="shopware AG">Shopware</a> 
+            <a href="https://shopware.com/" title="shopware AG">Shopware</a>
             with VueJS in Schöppingen at the western most edge of Germany.
             I'm frontend developer interested in all things web.
         </p>
