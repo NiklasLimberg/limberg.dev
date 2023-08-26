@@ -59,16 +59,25 @@
     <meta property="og:type" content="article">
     <meta property="article:author" content="@NiklasLimberg">
     <meta property="article:published_time" content="{data.metadata.date}">
+    {#if data.metadata.image}
+        <meta property="og:image" content="{data.metadata.image}">
+    {/if }
 </svelte:head>
 
 <div class="article-wrapper article">
     <aside class="toc">
         <TableOfContents tableOfContents={data.metadata.toc} currentHeadlineSlug={currentHeadlineSlug} />
     </aside>
-    <main class="restrict-width">
-        <a class="back-link" href="/blog">← Back to blog</a>
-        <svelte:component this={data.content} />
-    </main>
+    <div class="restrict-width">
+        <main >
+            <a class="back-link" href="/blog">← Back to blog</a>
+            <svelte:component this={data.content} />
+
+        </main>
+        <footer>
+            <p>© {new Date().getFullYear()} Niklas Limberg</p>
+        </footer>
+    </div>
 </div>
 
 <style>
@@ -101,5 +110,9 @@
         display: inline-block;
         text-decoration: none;
         padding: 0 8px;
+    }
+
+    footer {
+        margin-top: 32px;
     }
 </style>
