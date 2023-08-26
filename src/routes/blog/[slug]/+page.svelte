@@ -57,11 +57,13 @@
     <meta property="og:description " content="{data.metadata.description}" />
 
     <meta property="og:type" content="article">
-    <meta property="article:author" content="@NiklasLimberg">
+    <meta property="article:author" content="@Niklas_Limberg">
     <meta property="article:published_time" content="{data.metadata.date}">
-    {#if data.metadata.image}
-        <meta property="og:image" content="{data.metadata.image}">
-    {/if }
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@Niklas_Limberg" />
+    <meta name="twitter:title" content="{data.metadata.title}" />
+    <meta name="twitter:description" content="{data.metadata.description}" />
 </svelte:head>
 
 <div class="article-wrapper article">
