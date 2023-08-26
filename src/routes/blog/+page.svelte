@@ -27,7 +27,7 @@
         {/each}
     </main>
     <footer>
-        <p>©2023 Niklas Limberg</p>
+        <p>© {new Date().getFullYear()} Niklas Limberg</p>
     </footer>
 </div>
 

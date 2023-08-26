@@ -21,5 +21,7 @@ export async function getPosts() {
         });
     }
 
-    return posts;
+    return posts.sort((a, b) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
 }
