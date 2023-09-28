@@ -1,38 +1,9 @@
-# create-svelte
+# limberg.dev Devblog
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+A custom blog built on top of [Svelte Kit](https://kit.svelte.dev/) and [mdsvx](https://mdsvex.com/) statically hosted on [Cloudflare Pages](https://pages.cloudflare.com/).
 
-## Creating a project
+I use mdsvx with custom remark plugins to add markdown support to Svelte. The remark plugins add `<sections>` elements around headlines and extract a table of content based on the headlines of each individual post. Each post also uses a custom `Header` component to provide [semantic HTML](https://web.dev/learn/html/semantic-html/) for the post title and description.
 
-If you're seeing this, you've probably already done this step. Congrats!
+I designed the blog myself with entirely custom CSS.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+The tech stack of this blog was inspired by this blog post by [Josh Collinsworth](https://joshcollinsworth.com/blog/build-static-sveltekit-markdown-blog).
