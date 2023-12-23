@@ -2,6 +2,7 @@
     import type { PageData } from './$types';
     import { faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
     import PostOverview from '$lib/components/PostOverview.svelte';
+    import Image from '$lib/components/Image.svelte';
     import Fa from 'svelte-fa';
 
     export let data: PageData;
@@ -14,19 +15,48 @@
 
 <div class="restrict-width center">
     <header>
-        <h1>limberg.dev DevBlog</h1>
-        <p>Hi, I'm Niklas Limberg and I'm currently working as a software developer at
-            <a href="https://shopware.com/" title="shopware AG">Shopware</a>
-            with VueJS in Schöppingen at the western most edge of Germany.
-            I'm frontend developer interested in all things web.
-        </p>
-        <p>
-            I generally write about the web platform, centered around building progressively enhancement websites
-            using the newest features of the platform.
-        </p>
+        <div class="header-grid">
+            <Image
+                alt="Headshot of me"
+                src="/img/home/headshot.jpg"
+                altSrc="/img/home/headshot.jpg"
+                height={1000}
+                width={1000}
+                rounded={true}
+                loading="eager">
+            </Image>
+            <div>
+                <h1>
+                    Hi! I'm Niklas.
+                </h1>
+                <p>
+                    I'm software developer interested in all things web.
+                </p>
+                <div class="social-links">
+                    <a href="https://github.com/NiklasLimberg" title="GitHub Profile">
+                        <Fa icon={faGithub} size="2x" />
+                    </a>
+                    <a href="https://twitter.com/Niklas_Limberg" title="Twitter Profile">
+                        <Fa icon="{faTwitter}" size="2x" />
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h2>About me</h2>
+            <p>
+                I'm currently working on open source at
+                <a href="https://shopware.com/" title="shopware AG">shopware AG</a>
+                primarily with TypeScript and VueJS.
+            </p>
+            <p>
+                I generally write about the web platform, centered around building progressively enhanced websites
+                using the newest features of the platform.
+            </p>
+        </div>
     </header>
 
-    <main>
+    <main >
         <section>
             <div class="posts-section-header">
                 <h2 style="display: inline">My latest blog posts</h2>
@@ -41,21 +71,25 @@
                 />
             {/each}
         </section>
-
-        <section>
-            <p>I'm also on these social media sites:</p>
-            <div class="social-links">
-                <a href="https://github.com/NiklasLimberg" title="GitHub Profile"><Fa icon={faGithub} size="2x" /></a>
-                <a href="https://twitter.com/Niklas_Limberg" title="Twitter Profile"><Fa icon="{faTwitter}" size="2x" /></a>
-            </div>
-        </section>
     </main>
     <footer>
-        <p>©2023 Niklas Limberg</p>
+        <p>© {new Date().getFullYear()} Niklas Limberg</p>
     </footer>
 </div>
 
 <style>
+    .header-grid {
+        display: grid;
+        grid-template-columns: 40% 60%;
+        align-items: center;
+        gap: 32px;
+        margin-bottom: 32px;
+    }
+
+    .header-grid h1 {
+        margin: 0;
+    }
+
     .center {
         margin: 0 auto;
     }
@@ -70,7 +104,6 @@
         display: flex;
         align-items: center;
         gap: 16px;
-        margin-bottom: 16px;
     }
 </style>
 
