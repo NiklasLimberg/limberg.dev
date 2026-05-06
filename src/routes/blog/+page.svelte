@@ -2,7 +2,7 @@
     import type { PageData } from './$types';
     import PostOverview from '$lib/components/PostOverview.svelte';
 
-    let { data }: { data: PageData } = $props();
+    const { data }: { data: PageData } = $props();
 </script>
 
 <svelte:head>

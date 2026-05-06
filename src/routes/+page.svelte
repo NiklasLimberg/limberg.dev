@@ -6,7 +6,7 @@
     import Image from '$lib/components/Image.svelte';
     import Fa from 'svelte-fa';
 
-    let { data }: { data: PageData } = $props();
+    const { data }: { data: PageData } = $props();
 </script>
 
 <svelte:head>

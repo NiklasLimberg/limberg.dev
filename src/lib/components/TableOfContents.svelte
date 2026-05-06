@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Metadata } from '$lib/types/metadata';
 
-    let { tableOfContents, currentHeadlineSlug }: {
+    const { tableOfContents, currentHeadlineSlug }: {
         tableOfContents: Metadata['toc'];
         currentHeadlineSlug: string;
     } = $props();
@@ -18,7 +18,7 @@
     </ol>
 </nav>
 
-<style scoped>
+<style>
     nav {
         position: sticky;
         top: 100px;

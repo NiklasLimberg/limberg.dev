@@ -22,7 +22,7 @@
     "github-slugger": "2.0.0",
     "hast-util-to-string": "^3.0.1",
     "mdsvex": "^0.12.7",
-    "prismjs": "^1.30.0",
+    "shiki": "^4.0.2",
     "svelte": "^5.55.5",
     "svelte-check": "^4.4.8",
     "svelte-fa": "^4.0.4",

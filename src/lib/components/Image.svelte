@@ -1,5 +1,5 @@
 <script lang="ts">
-    let {
+    const {
         src,
         altSrc,
         width,
@@ -26,7 +26,7 @@
 </picture>
 
 
-<style scoped>
+<style>
     picture, img {
         height: auto;
     }

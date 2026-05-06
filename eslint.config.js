@@ -8,10 +8,18 @@ import svelteConfig from './svelte.config.js';
 
 export default tseslint.config(
     eslint.configs.recommended,
-    ...tseslint.configs.recommended,
+    ...tseslint.configs.recommendedTypeChecked,
     ...eslintPluginSvelte.configs['flat/recommended'],
     {
         rules: {
+            '@typescript-eslint/no-unnecessary-condition': 'error',
+            '@typescript-eslint/consistent-type-imports': 'error',
+            '@typescript-eslint/switch-exhaustiveness-check': 'error',
+            eqeqeq: ['error', 'always'],
+            'no-console': ['warn', { allow: ['warn', 'error'] }],
+            'no-debugger': 'error',
+            'prefer-const': 'error',
+            'no-var': 'error',
             'array-bracket-newline': ['error', 'consistent'],
             'array-bracket-spacing': ['error', 'never'],
             'arrow-spacing': ['error'],
@@ -67,6 +75,10 @@ export default tseslint.config(
                 },
             ],
         },
+    },
+    {
+        files: ['**/*.js'],
+        ...tseslint.configs.disableTypeChecked,
     },
     {
         ignores: ['.svelte-kit/', 'build/'],

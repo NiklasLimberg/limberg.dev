@@ -3,7 +3,7 @@
     import type { Metadata } from '$lib/types/metadata';
     import { formatDate } from '$lib/formater/date';
 
-    let { metadata, children }: { metadata: Metadata; children?: Snippet } = $props();
+    const { metadata, children }: { metadata: Metadata; children?: Snippet } = $props();
 </script>
 
 <header>

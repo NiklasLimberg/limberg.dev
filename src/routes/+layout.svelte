@@ -2,7 +2,7 @@
     import type { Snippet } from 'svelte';
     import { resolve } from '$app/paths';
 
-    let { children }: { children?: Snippet } = $props();
+    const { children }: { children?: Snippet } = $props();
 </script>
 
 <nav>

@@ -2,7 +2,7 @@
     import { resolve } from '$app/paths';
     import { formatDate } from '$lib/formater/date';
 
-    let { title, slug, description, date }: {
+    const { title, slug, description, date }: {
         title: string;
         slug: string;
         description: string;

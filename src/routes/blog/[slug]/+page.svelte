@@ -4,10 +4,9 @@
     import TableOfContents from '$lib/components/TableOfContents.svelte';
     import { onMount } from 'svelte';
 
-    import 'prismjs/themes/prism.css';
     import '$lib/styles/code.css';
 
-    let { data }: { data: PageData } = $props();
+    const { data }: { data: PageData } = $props();
 
     const tableOfContents = $derived(data.metadata.toc);
     let currentHeadlineSlug = $state('');
@@ -18,7 +17,7 @@
         let lastHeadlineBelowFold = sectionHeadlines[0];
 
         if(window.scrollY + window.innerHeight + 50 > document.body.scrollHeight) {
-            currentHeadlineSlug = sectionHeadlines?.at(-1)?.id ?? '';
+            currentHeadlineSlug = sectionHeadlines.at(-1)?.id ?? '';
             return;
         }
 
@@ -30,7 +29,7 @@
             lastHeadlineBelowFold = headline;
         }
 
-        currentHeadlineSlug = lastHeadlineBelowFold?.id;
+        currentHeadlineSlug = lastHeadlineBelowFold?.id ?? '';
     }
 
     onMount(() => {
