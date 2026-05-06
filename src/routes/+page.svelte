@@ -1,11 +1,12 @@
 <script lang="ts">
     import type { PageData } from './$types';
+    import { resolve } from '$app/paths';
     import { faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
     import PostOverview from '$lib/components/PostOverview.svelte';
     import Image from '$lib/components/Image.svelte';
     import Fa from 'svelte-fa';
 
-    export let data: PageData;
+    const { data }: { data: PageData } = $props();
 </script>
 
 <svelte:head>
@@ -37,7 +38,7 @@
                         <Fa icon={faGithub} size="2x" />
                     </a>
                     <a href="https://twitter.com/Niklas_Limberg" title="Twitter Profile">
-                        <Fa icon="{faTwitter}" size="2x" />
+                        <Fa icon={faTwitter} size="2x" />
                     </a>
                 </div>
             </div>
@@ -60,12 +61,12 @@
         <section>
             <div class="posts-section-header">
                 <h2 style="display: inline">My latest blog posts</h2>
-                <a href="/blog">All Posts</a>
+                <a href={resolve('/blog')}>All Posts</a>
             </div>
-            {#each data.posts as post}
+            {#each data.posts as post (post.slug)}
                 <PostOverview
                     title={post.title}
-                    path={post.path}
+                    slug={post.slug}
                     description={post.description}
                     date={post.date}
                 />

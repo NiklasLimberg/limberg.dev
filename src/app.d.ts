@@ -1,4 +1,4 @@
-// See https://kit.svelte.dev/docs/types#app
+// See https://svelte.dev/docs/kit/types#app
 // for information about these interfaces
 declare global {
 	namespace App {
@@ -7,10 +7,6 @@ declare global {
 		// interface PageData {}
 		// interface Platform {}
 	}
-}
-
-declare module '@fortawesome/pro-solid-svg-icons/index.es' {
-	export * from '@fortawesome/free-brands-svg-icons';
 }
 
 export {};

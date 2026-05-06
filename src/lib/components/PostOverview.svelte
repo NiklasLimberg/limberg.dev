@@ -1,15 +1,18 @@
 <script lang="ts">
+    import { resolve } from '$app/paths';
     import { formatDate } from '$lib/formater/date';
 
-    export let title: string;
-    export let path: string;
-    export let description: string;
-    export let date: string;
+    const { title, slug, description, date }: {
+        title: string;
+        slug: string;
+        description: string;
+        date: string;
+    } = $props();
 </script>
 
 <article>
     <h2>
-        <a href={path} title="{title}">
+        <a href={resolve('/blog/[slug]', { slug })} title="{title}">
             {title}
         </a>
     </h2>

@@ -3,16 +3,23 @@
 import globals from 'globals';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
-
-import svelteParser from 'svelte-eslint-parser';
 import eslintPluginSvelte from 'eslint-plugin-svelte';
+import svelteConfig from './svelte.config.js';
 
 export default tseslint.config(
     eslint.configs.recommended,
-    ...tseslint.configs.recommended,
+    ...tseslint.configs.recommendedTypeChecked,
     ...eslintPluginSvelte.configs['flat/recommended'],
     {
         rules: {
+            '@typescript-eslint/no-unnecessary-condition': 'error',
+            '@typescript-eslint/consistent-type-imports': 'error',
+            '@typescript-eslint/switch-exhaustiveness-check': 'error',
+            eqeqeq: ['error', 'always'],
+            'no-console': ['warn', { allow: ['warn', 'error'] }],
+            'no-debugger': 'error',
+            'prefer-const': 'error',
+            'no-var': 'error',
             'array-bracket-newline': ['error', 'consistent'],
             'array-bracket-spacing': ['error', 'never'],
             'arrow-spacing': ['error'],
@@ -22,7 +29,6 @@ export default tseslint.config(
             'comma-spacing': ['error'],
             'func-call-spacing': ['error'],
             indent: ['error', 4],
-
             'max-len': ['error', 125],
             'no-extra-semi': 'error',
             'no-multiple-empty-lines': ['error'],
@@ -42,34 +48,28 @@ export default tseslint.config(
     },
     {
         languageOptions: {
-            ecmaVersion: 'latest',
-            sourceType: 'module',
             globals: { ...globals.node, ...globals.browser },
             parserOptions: {
-                projectService: true,
-                parser: tseslint.parser,
+                projectService: {
+                    allowDefaultProject: ['*.js', 'remark-plugins/*.js'],
+                },
                 extraFileExtensions: ['.svelte'],
                 tsconfigRootDir: import.meta.dirname,
             },
         },
     },
     {
-        files: ['**/*.svelte', '*.svelte'],
+        files: ['**/*.svelte'],
         languageOptions: {
-            ecmaVersion: 'latest',
-            sourceType: 'module',
-            globals: { ...globals.browser },
-            parser: svelteParser,
             parserOptions: {
                 parser: tseslint.parser,
-                extraFileExtensions: ['.svelte'],
+                svelteConfig,
             },
         },
         rules: {
             'svelte/indent': [
-                'error',  {
+                'error', {
                     indent: 4,
-                    ignoredNodes: [],
                     switchCase: 2,
                     alignAttributesVertically: false,
                 },
@@ -77,16 +77,10 @@ export default tseslint.config(
         },
     },
     {
-        ignores: [
-            '.DS_Store',
-            'node_modules',
-            '/build',
-            '/.svelte-kit',
-            '/package',
-            'package-lock.json',
-            'yarn.lock',
-            '.svelte-kit',
-        ],
+        files: ['**/*.js'],
+        ...tseslint.configs.disableTypeChecked,
     },
-
+    {
+        ignores: ['.svelte-kit/', 'build/'],
+    },
 );

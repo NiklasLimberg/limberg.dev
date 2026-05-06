@@ -1,19 +1,13 @@
 import adapter from '@sveltejs/adapter-cloudflare';
-import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { mdsvex } from 'mdsvex';
+import { codeToHtml } from 'shiki';
 
 import { remarkSections } from './remark-plugins/sectionize.js';
 import { buildToc } from './remark-plugins/extract-toc.js';
 
-import Prism from 'prismjs';
-import loadLanguages from 'prismjs/components/index.js';
-
-loadLanguages();
-
-function escapeHtml(code) {
-    return code.replace(
+function escapeSvelte(html) {
+    return html.replace(
         /[{}`]/g,
-        // (character) => ({ '{': '&#123;', '}': '&#125;', '`': '&#96;' }[character]),
         (character) => ({ '{': '&lbrace;', '}': '&rbrace;', '`': '&grave;' }[character]),
     );
 }
@@ -22,18 +16,23 @@ function escapeHtml(code) {
 export default {
     extensions: ['.svelte', '.md'],
     preprocess: [
-        vitePreprocess(),
         mdsvex({
             extension: '.md',
             remarkPlugins: [remarkSections, buildToc],
             highlight: {
-                async highlighter(code, langAndPath) {
+                async highlighter(code, langAndPath = '') {
                     const [lang, path] = langAndPath.split('=');
 
-                    const pathDiv = path ? `<div class="path">${path}</div>` : '';
-                    const html = escapeHtml(Prism.highlight(code, Prism.languages[lang], lang));
+                    const html = await codeToHtml(code, {
+                        lang: lang || 'text',
+                        theme: 'dark-plus',
+                    });
 
-                    return `<pre class="prismjs">${pathDiv}<code class="language-${lang}">${html}</code></pre>`;
+                    const withPath = path
+                        ? html.replace(/(<pre[^>]*>)/, `$1<div class="path">${path}</div>`)
+                        : html;
+
+                    return escapeSvelte(withPath);
                 },
             },
         }),

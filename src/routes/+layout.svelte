@@ -1,7 +1,14 @@
+<script lang="ts">
+    import type { Snippet } from 'svelte';
+    import { resolve } from '$app/paths';
+
+    const { children }: { children?: Snippet } = $props();
+</script>
+
 <nav>
-    <a href="/">limberg.dev</a>
+    <a href={resolve('/')}>limberg.dev</a>
 </nav>
-<slot />
+{@render children?.()}
 
 <style>
     nav {

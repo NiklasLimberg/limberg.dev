@@ -1,11 +1,21 @@
 <script lang="ts">
-    export let src: string;
-    export let altSrc: string|undefined;
-    export let width: number;
-    export let height: number;
-    export let alt: string;
-    export let loading: 'lazy'|'eager' = 'lazy' ;
-    export let rounded: boolean = false;
+    const {
+        src,
+        altSrc,
+        width,
+        height,
+        alt,
+        loading = 'lazy',
+        rounded = false,
+    }: {
+        src: string;
+        altSrc?: string;
+        width: number;
+        height: number;
+        alt: string;
+        loading?: 'lazy' | 'eager';
+        rounded?: boolean;
+    } = $props();
 </script>
 
 <picture class:rounded="{rounded}">
@@ -16,7 +26,7 @@
 </picture>
 
 
-<style scoped>
+<style>
     picture, img {
         height: auto;
     }

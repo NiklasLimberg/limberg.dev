@@ -401,7 +401,7 @@ end of extension
 
 The virtual call stack works great as long as `$super()` is being called synchronously. It however breaks down completely if `$super()` is called asynchronously.
 
-To illustrate this, let's look at an example by modifying the last override in the [chapter about the virtual call stack](#The-virtual-call-stack):
+To illustrate this, let's look at an example by modifying the last override in the [chapter about the virtual call stack](#the-virtual-call-stack):
 
 ```javascript=
 Shopware.Component.override('counter', {

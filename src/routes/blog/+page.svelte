@@ -2,7 +2,7 @@
     import type { PageData } from './$types';
     import PostOverview from '$lib/components/PostOverview.svelte';
 
-    export let data: PageData;
+    const { data }: { data: PageData } = $props();
 </script>
 
 <svelte:head>
@@ -17,10 +17,10 @@
     </header>
 
     <main>
-        {#each data.posts as post}
+        {#each data.posts as post (post.slug)}
             <PostOverview
                 title={post.title}
-                path={post.path}
+                slug={post.slug}
                 description={post.description}
                 date={post.date}
             />
