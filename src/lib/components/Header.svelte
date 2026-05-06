@@ -1,8 +1,9 @@
 <script lang="ts">
-    import type { Metadata  } from '$lib/types/metadata';
+    import type { Snippet } from 'svelte';
+    import type { Metadata } from '$lib/types/metadata';
     import { formatDate } from '$lib/formater/date';
 
-    export let metadata: Metadata;
+    let { metadata, children }: { metadata: Metadata; children?: Snippet } = $props();
 </script>
 
 <header>
@@ -12,7 +13,7 @@
         <summary>Table of contents</summary>
         <div class="toc-list">
             <ol>
-                {#each metadata.toc as item}
+                {#each metadata.toc as item (item.slug)}
                     <li>
                         <a href="#{item.slug}">{item.text}</a>
                     </li>
@@ -21,7 +22,7 @@
         </div>
     </details>
 
-    <slot />
+    {@render children?.()}
 </header>
 
 <style>

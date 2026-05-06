@@ -1,15 +1,16 @@
 <script lang="ts">
     import type { PageData } from './$types';
+    import { resolve } from '$app/paths';
     import TableOfContents from '$lib/components/TableOfContents.svelte';
     import { onMount } from 'svelte';
 
     import 'prismjs/themes/prism.css';
     import '$lib/styles/code.css';
 
-    export let data: PageData;
+    let { data }: { data: PageData } = $props();
 
-    const tableOfContents = data.metadata.toc;
-    let currentHeadlineSlug = '';
+    const tableOfContents = $derived(data.metadata.toc);
+    let currentHeadlineSlug = $state('');
 
     const sectionHeadlines: Element[] = [];
 
@@ -32,7 +33,6 @@
         currentHeadlineSlug = lastHeadlineBelowFold?.id;
     }
 
-
     onMount(() => {
         for(const headline of tableOfContents) {
             const headlineElement = document.getElementById(headline.slug);
@@ -47,6 +47,8 @@
         findCurrentHeadline();
         window.onscroll = findCurrentHeadline;
     });
+
+    const Content = $derived(data.content);
 </script>
 
 <svelte:head>
@@ -72,8 +74,8 @@
     </aside>
     <div class="restrict-width">
         <main >
-            <a class="back-link" href="/blog">← Back to blog</a>
-            <svelte:component this={data.content} />
+            <a class="back-link" href={resolve('/blog')}>← Back to blog</a>
+            <Content />
 
         </main>
         <footer>

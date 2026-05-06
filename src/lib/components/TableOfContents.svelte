@@ -1,14 +1,16 @@
 <script lang="ts">
     import type { Metadata } from '$lib/types/metadata';
 
-    export let tableOfContents: Metadata['toc'];
-    export let currentHeadlineSlug: string;
+    let { tableOfContents, currentHeadlineSlug }: {
+        tableOfContents: Metadata['toc'];
+        currentHeadlineSlug: string;
+    } = $props();
 </script>
 
 <nav>
     <div class="toc-heading">Table of Contents</div>
     <ol>
-        {#each tableOfContents as item}
+        {#each tableOfContents as item (item.slug)}
             <li class:current={currentHeadlineSlug === item.slug}>
                 <a href="#{item.slug}" aria-current="{currentHeadlineSlug === item.slug}">{item.text}</a>
             </li>

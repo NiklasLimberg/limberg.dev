@@ -16,7 +16,7 @@ export async function GET() {
     const pages = ['/', '/blog'];
     const posts = await getPosts();
 
-    const paths = pages.concat(posts.map((post) => post.path));
+    const paths = pages.concat(posts.map((post) => `/blog/${post.slug}`));
 
     const headers = {
         'Cache-Control': 'max-age=0, s-maxage=3600',

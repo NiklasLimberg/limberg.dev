@@ -1,5 +1,4 @@
 import adapter from '@sveltejs/adapter-cloudflare';
-import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { mdsvex } from 'mdsvex';
 
 import { remarkSections } from './remark-plugins/sectionize.js';
@@ -13,7 +12,6 @@ loadLanguages();
 function escapeHtml(code) {
     return code.replace(
         /[{}`]/g,
-        // (character) => ({ '{': '&#123;', '}': '&#125;', '`': '&#96;' }[character]),
         (character) => ({ '{': '&lbrace;', '}': '&rbrace;', '`': '&grave;' }[character]),
     );
 }
@@ -22,7 +20,6 @@ function escapeHtml(code) {
 export default {
     extensions: ['.svelte', '.md'],
     preprocess: [
-        vitePreprocess(),
         mdsvex({
             extension: '.md',
             remarkPlugins: [remarkSections, buildToc],

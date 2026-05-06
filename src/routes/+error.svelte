@@ -1,8 +1,8 @@
 <script>
-    import { page } from '$app/stores';
+    import { page } from '$app/state';
 </script>
 
-<h1 class="error-message">{$page.error?.message ?? 'Internal Server Error'}</h1>
+<h1 class="error-message">{page.error?.message ?? 'Internal Server Error'}</h1>
 
 <style>
 .error-message {
