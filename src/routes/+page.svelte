@@ -11,7 +11,7 @@
 
 <svelte:head>
     <title>limberg.dev DevBlog</title>
-    <meta name="description" content="About Niklas Limberg" />
+    <meta name="description" content="Niklas Limberg — frontend engineer writing about the web platform." />
 </svelte:head>
 
 <div class="restrict-width center">
@@ -31,7 +31,7 @@
                     Hi! I'm Niklas.
                 </h1>
                 <p>
-                    I'm software developer interested in all things web.
+                    Frontend / web engineer working primarily with TypeScript.
                 </p>
                 <div class="social-links">
                     <a href="https://github.com/NiklasLimberg" title="GitHub Profile">
@@ -46,13 +46,19 @@
         <div>
             <h2>About me</h2>
             <p>
-                I'm currently working on open source at
-                <a href="https://shopware.com/" title="shopware AG">shopware AG</a>
-                primarily with TypeScript and VueJS.
+                I currently work as a software engineer at
+                <a href="https://check24.de/" title="Check24">Check24 Hotel Connect</a>
+                in Essen, Germany, where I've been building React frontends with TypeScript,
+                React Hook Form, and TanStack libraries since May 2024. Most of that work is closed source.
             </p>
             <p>
-                I generally write about the web platform, centered around building progressively enhanced websites
-                using the newest features of the platform.
+                Before that I worked at
+                <a href="https://shopware.com/" title="shopware AG">shopware AG</a>
+                on the Vue-based Administration UI — a lot of how I think about frontend development was shaped there.
+            </p>
+            <p>
+                The easiest way to reach me is via email at
+                <a href="mailto:niklas@limberg.dev">niklas@limberg.dev</a>.
             </p>
         </div>
     </header>
